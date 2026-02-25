@@ -14,12 +14,10 @@
         .form-container { width: 100%; max-width: 500px; margin-top: 40px; border: 5px solid #f00; padding: 30px; background: #fff; }
         input { width: 100%; padding: 15px; margin: 10px 0; border: 3px solid #f00; font-family: inherit; color: #f00; font-size: 16px; }
         input::placeholder { color: #f00; opacity: 0.5; }
-        .btn-add { background: #fff; color: #f00; border: 2px dashed #f00; padding: 10px; cursor: pointer; font-family: inherit; margin: 10px 0; width: 100%; transition: 0.2s; }
-        .btn-add:hover { background: #ffe6e6; }
+        .btn-add { background: #fff; color: #f00; border: 2px dashed #f00; padding: 10px; cursor: pointer; font-family: inherit; margin: 10px 0; width: 100%; }
         .btn-submit { background: #f00; color: #fff; border: none; padding: 20px; width: 100%; font-family: inherit; font-size: 20px; cursor: pointer; text-transform: uppercase; transition: 0.2s; margin-top: 20px; }
         .btn-submit:hover { transform: scale(1.05); background: #000; }
-        #link-list { font-size: 14px; text-align: left; margin: 15px 0; color: #000; }
-        .link-item { margin-bottom: 5px; border-bottom: 1px solid #f00; padding-bottom: 5px; }
+        #link-list { font-size: 12px; text-align: left; margin: 10px 0; color: #000; }
     </style>
 </head>
 <body>
@@ -32,26 +30,26 @@
             <input id="rn" placeholder="СЛАГ РЕЛИЗА (ПАПКА)">
             <input id="art" placeholder="АРТИСТ">
             <input id="tit" placeholder="НАЗВАНИЕ ТРЕКА">
-            <input id="cover" placeholder="ССЫЛКА НА ОБЛОЖКУ (URL)">
+            <input id="cover" placeholder="URL ОБЛОЖКИ (IMG)">
             <input id="upc" placeholder="UPC (НЕОБЯЗАТЕЛЬНО)">
             
             <div id="link-list"></div>
             <button class="btn-add" onclick="addLink()">+ ДОБАВИТЬ ССЫЛКУ</button>
             
-            <button class="btn-submit" onclick="deploy()">ЗАПУСТИТЬ КАРЬЕРУ</button>
+            <button class="btn-submit" onclick="deploy()">ДОБАВИТЬ ПРЕСЕЙВ</button>
         </div>
     </section>
 
     <script>
-        const WORKER_URL = 'https://privateworkerplsdontusemyworkeridontwantitiuseitformyplatform.utubnatoyashiy.workers.dev/'; 
+        const WORKER_URL = 'https://privateworkerplsdontusemyworkeridontwantitiuseitformyplatform.utubnatoyashiy.workers.dev/api/create'; 
 
         let customLinks = [];
 
         function addLink() {
-            const url = prompt('Пожалуйста, вставьте ссылку на площадку:');
+            const url = prompt('Пожалуйста, введите ссылку:');
             if (url) {
                 customLinks.push({ url: url, isP: false });
-                document.getElementById('link-list').innerHTML += '<div class="link-item">• ' + url + '</div>';
+                document.getElementById('link-list').innerHTML += '<div>• ' + url + '</div>';
             }
         }
 
@@ -61,14 +59,14 @@
                 releaseName: document.getElementById('rn').value,
                 artist: document.getElementById('art').value,
                 title: document.getElementById('tit').value,
-                coverUrl: document.getElementById('cover').value, // Добавили обложку
+                coverUrl: document.getElementById('cover').value,
                 upc: document.getElementById('upc').value,
                 bgColor: "#ffffff", 
                 textColor: "#ff0000",
                 customLinks: customLinks
             };
 
-            if(!data.username || !data.releaseName) return alert('Пожалуйста, заполните поля для папок.');
+            if(!data.username || !data.releaseName) return alert('Пожалуйста, заполните поля папок!');
 
             try {
                 const res = await fetch(WORKER_URL, {
@@ -78,12 +76,17 @@
                 });
                 
                 if (res.ok) {
+                    // СОХРАНЯЕМ В ИСТОРИЮ ДЛЯ DASHBOARD
+                    let history = JSON.parse(localStorage.getItem('tilink_history') || '[]');
+                    history.push(data);
+                    localStorage.setItem('tilink_history', JSON.stringify(history));
+
                     alert('Успешно отправлено на GitHub! Ваш смартлинк скоро будет готов.');
                 } else {
-                    alert('Произошла ошибка при отправке. Пожалуйста, проверьте настройки воркера.');
+                    alert('Ошибка воркера. Проверьте статус вашего Cloudflare Worker.');
                 }
             } catch (e) {
-                alert('К сожалению, произошла ошибка: ' + e.message);
+                alert('Произошла системная ошибка: ' + e.message);
             }
         }
     </script>
