@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TILINK V6 — Твой Музыкальный Смартлинк</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #ffffff; 
+            color: #ff0000;            
+            font-family: 'Dela Gothic One', cursive;
+            text-align: center;
+            line-height: 1.1;
+            overflow-x: hidden;
+        }
+        /* Анимация шоб красиво выезжало */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero {
+            padding: 100px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 75vh;
+            animation: slideUp 0.8s ease-out;
+        }
+        h1 {
+            font-size: 8vw;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .highlight {
+            background: #ff0000;
+            color: #ffffff;
+            padding: 5px 25px;
+            display: inline-block;
+            transform: rotate(-2deg); /* Дерзкий наклон */
+            box-shadow: 8px 8px 0px #000000; /* Жесткая тень */
+            transition: 0.3s;
+        }
+        .highlight:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+        .subtitle {
+            font-size: 2vw;
+            max-width: 800px;
+            margin-top: 30px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+        .cta-section {
+            background: #ff0000;
+            color: #ffffff;
+            padding: 80px 20px;
+            animation: slideUp 1s ease-out;
+        }
+        .cta-text {
+            font-size: 3.5vw;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            text-shadow: 3px 3px 0px #000000; /* Объемчик */
+        }
+        .btn {
+            display: inline-block;
+            background: #ffffff;
+            color: #ff0000;
+            padding: 20px 50px;
+            text-decoration: none;
+            font-size: 2vw;
+            border-radius: 50px;
+            border: 4px solid #ffffff;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: 'Dela Gothic One', cursive;
+        }
+        .btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            background: #000000; /* При наведении чернеет */
+            color: #ffffff;
+            border-color: #000000;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 14vw; }
+            .highlight { box-shadow: 5px 5px 0px #000000; }
+            .subtitle { font-size: 5vw; margin-top: 20px; }
+            .cta-text { font-size: 6vw; }
+            .btn { font-size: 6vw; padding: 15px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <h1>ИНСТРУМЕНТЫ ДЛЯ<br>ВАШЕЙ <span class="highlight">КАРЬЕРЫ</span></h1>
+        <p class="subtitle">Увеличивайте прослушивания своей музыки во всех стримингах. Быстро. Бесплатно. Для тебя.</p>
+    </section>
+
+    <section class="cta-section">
+        <p class="cta-text">TILINK поможет построить карьеру с нуля</p>
+        <a href="/create" class="btn">ПОПРОБОВАТЬ СЕЙЧАС</a>
+    </section>
+
+</body>
+</html>
