@@ -3,53 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TILINK V6 — Создать Смартлинк</title>
+    <title>TILINK V6 — Твой первый смартлинк</title>
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #fff; color: #f00; font-family: 'Dela Gothic One', cursive; text-align: center; line-height: 1.1; }
-        .hero { padding: 60px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        h1 { font-size: 8vw; text-transform: uppercase; margin-bottom: 20px; }
-        .highlight { background: #f00; color: #fff; padding: 5px 20px; display: inline-block; transform: rotate(-2deg); box-shadow: 8px 8px 0 #000; }
-        .form-container { width: 100%; max-width: 500px; margin-top: 40px; border: 5px solid #f00; padding: 30px; background: #fff; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border: 3px solid #f00; font-family: inherit; color: #f00; font-size: 16px; }
-        input::placeholder { color: #f00; opacity: 0.5; }
-        .btn-add { background: #fff; color: #f00; border: 2px dashed #f00; padding: 10px; cursor: pointer; font-family: inherit; margin: 10px 0; width: 100%; }
-        .btn-submit { background: #f00; color: #fff; border: none; padding: 20px; width: 100%; font-family: inherit; font-size: 20px; cursor: pointer; text-transform: uppercase; transition: 0.2s; margin-top: 20px; }
-        .btn-submit:hover { transform: scale(1.05); background: #000; }
-        #link-list { font-size: 12px; text-align: left; margin: 10px 0; color: #000; }
+        body { background: #fff; color: #f00; font-family: 'Dela Gothic One', cursive; display: flex; flex-wrap: wrap; min-height: 100vh; }
+        
+        .settings { flex: 1; min-width: 350px; padding: 40px; border-right: 5px solid #f00; height: 100vh; overflow-y: auto; }
+        .preview-zone { flex: 1; min-width: 350px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; height: 100vh; position: sticky; top: 0; }
+        
+        h1 { font-size: 2.5rem; text-transform: uppercase; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; font-size: 12px; margin-bottom: 5px; text-transform: uppercase; color: #333; }
+        
+        input, select { width: 100%; padding: 12px; border: 3px solid #f00; font-family: inherit; color: #f00; font-size: 14px; background: #fff; outline: none; }
+        .color-row { display: flex; gap: 10px; margin: 15px 0; }
+        input[type="color"] { height: 50px; cursor: pointer; padding: 0; }
+
+        .btn-add { background: #fff; color: #f00; border: 2px dashed #f00; padding: 10px; width: 100%; cursor: pointer; font-family: inherit; margin-bottom: 10px; transition: 0.2s; }
+        .btn-add:hover { background: #fff0f0; }
+        
+        .btn-deploy { background: #f00; color: #fff; border: none; padding: 20px; width: 100%; font-family: inherit; font-size: 20px; cursor: pointer; text-transform: uppercase; margin-top: 20px; box-shadow: 0 5px 0 #900; transition: 0.1s; }
+        .btn-deploy:active { transform: translateY(3px); box-shadow: 0 2px 0 #900; }
+
+        /* Превью телефона */
+        #phone { width: 300px; height: 550px; border: 8px solid #000; border-radius: 35px; overflow-y: auto; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); position: relative; }
+        #p-img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; display: none; margin-bottom: 15px; border: 2px solid #f00; }
+        .prev-btn { display: block; padding: 12px; margin: 8px 0; border-radius: 8px; text-decoration: none; font-weight: bold; text-align: center; font-size: 11px; text-transform: uppercase; }
+
+        @media (max-width: 768px) { .settings, .preview-zone { height: auto; position: static; flex: 100%; } .settings { border-right: none; border-bottom: 5px solid #f00; } }
     </style>
 </head>
 <body>
 
-    <section class="hero">
-        <h1>TILINK <span class="highlight">V6</span></h1>
+    <div class="settings">
+        <h1>TI<span style="background:#f00; color:#fff; padding:0 8px;">LINK</span></h1>
         
-        <div class="form-container">
-            <input id="un" placeholder="ЮЗЕРНЕЙМ (ПАПКА)">
-            <input id="rn" placeholder="СЛАГ РЕЛИЗА (ПАПКА)">
-            <input id="art" placeholder="АРТИСТ">
-            <input id="tit" placeholder="НАЗВАНИЕ ТРЕКА">
-            <input id="cover" placeholder="URL ОБЛОЖКИ (IMG)">
-            <input id="upc" placeholder="UPC (НЕОБЯЗАТЕЛЬНО)">
-            
-            <div id="link-list"></div>
-            <button class="btn-add" onclick="addLink()">+ ДОБАВИТЬ ССЫЛКУ</button>
-            
-            <button class="btn-submit" onclick="deploy()">ГОТОВО</button>
+        <div class="form-group">
+            <label>Твой уникальный ID (основная папка)</label>
+            <input id="un" placeholder="Например: super-star" oninput="updatePreview()">
         </div>
-    </section>
+
+        <div class="form-group">
+            <label>Название для ссылки (папка релиза)</label>
+            <input id="rn" placeholder="Например: my-first-song" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+            <label>Данные артиста</label>
+            <input id="art" placeholder="Имя артиста" oninput="updatePreview()" style="margin-bottom: 5px;">
+            <input id="tit" placeholder="Название трека" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+            <label>Выбери обложку (квадратная картинка)</label>
+            <input type="file" id="coverFile" accept="image/*" onchange="handleFile(this)">
+        </div>
+
+        <div class="color-row">
+            <div style="flex:1">
+                <label>Цвет фона</label>
+                <input type="color" id="bgColor" value="#ffffff" oninput="updatePreview()">
+            </div>
+            <div style="flex:1">
+                <label>Цвет текста</label>
+                <input type="color" id="textColor" value="#ff0000" oninput="updatePreview()">
+            </div>
+        </div>
+
+        <div id="link-list"></div>
+        <button class="btn-add" onclick="addLink()">+ ДОБАВИТЬ ПЛОЩАДКУ</button>
+        
+        <button class="btn-deploy" onclick="deploy()">СОЗДАТЬ СТРАНИЦУ</button>
+    </div>
+
+    <div class="preview-zone">
+        <div id="phone">
+            <img id="p-img">
+            <h2 id="p-tit" style="font-size: 1.2rem;">Твой релиз</h2>
+            <p id="p-art" style="opacity: 0.7; font-size: 0.9rem; margin-bottom: 15px;">Твое имя</p>
+            <div id="p-links"></div>
+        </div>
+    </div>
 
     <script>
-        const WORKER_URL = 'https://privateworkerplsdontusemyworkeridontwantitiuseitformyplatform.utubnatoyashiy.workers.dev/api/create'; 
-
+        const WORKER_URL = 'https://privateworkerplsdontusemyworkeridontwantitiuseitformyplatform.utubnatoyashiy.workers.dev/'; [cite: 2026-02-25]
         let customLinks = [];
+        let base64Image = null;
+
+        function handleFile(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                base64Image = reader.result.split(',')[1]; [cite: 2026-02-25]
+                document.getElementById('p-img').src = reader.result;
+                document.getElementById('p-img').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updatePreview() {
+            const bg = document.getElementById('bgColor').value;
+            const tx = document.getElementById('textColor').value;
+            const ph = document.getElementById('phone');
+            ph.style.backgroundColor = bg;
+            ph.style.color = tx;
+
+            document.getElementById('p-tit').innerText = document.getElementById('tit').value || "Название релиза";
+            document.getElementById('p-art').innerText = document.getElementById('art').value || "Твое имя";
+            
+            const pLinks = document.getElementById('p-links');
+            pLinks.innerHTML = customLinks.map(l => `
+                <div class="prev-btn" style="background:${tx}; color:${bg}">${l.platform}</div>
+            `).join('');
+        }
 
         function addLink() {
-            const url = prompt('Пожалуйста, введите ссылку:');
+            const url = prompt('Вставьте ссылку на музыку:');
             if (url) {
-                customLinks.push({ url: url, isP: false });
-                document.getElementById('link-list').innerHTML += '<div>• ' + url + '</div>';
+                const plat = prompt('Название площадки (Spotify, VK, и т.д.):', 'Слушать');
+                customLinks.push({ url, platform: plat });
+                updatePreview();
             }
         }
 
@@ -59,14 +134,15 @@
                 releaseName: document.getElementById('rn').value,
                 artist: document.getElementById('art').value,
                 title: document.getElementById('tit').value,
-                coverUrl: document.getElementById('cover').value,
-                upc: document.getElementById('upc').value,
-                bgColor: "#ffffff", 
-                textColor: "#ff0000",
-                customLinks: customLinks
+                bgColor: document.getElementById('bgColor').value,
+                textColor: document.getElementById('textColor').value,
+                customLinks: customLinks,
+                coverBase64: base64Image [cite: 2026-02-25]
             };
 
-            if(!data.username || !data.releaseName) return alert('Пожалуйста, заполните поля папок!');
+            if(!data.username || !data.releaseName || !base64Image) {
+                return alert('Пожалуйста, заполните все поля и выберите обложку!'); [cite: 2026-02-25]
+            }
 
             try {
                 const res = await fetch(WORKER_URL, {
@@ -76,19 +152,21 @@
                 });
                 
                 if (res.ok) {
-                    // СОХРАНЯЕМ В ИСТОРИЮ ДЛЯ DASHBOARD
                     let history = JSON.parse(localStorage.getItem('tilink_history') || '[]');
                     history.push(data);
                     localStorage.setItem('tilink_history', JSON.stringify(history));
-
-                    alert('Успешно отправлено на GitHub! Ваш смартлинк скоро будет готов.');
+                    
+                    alert('Успешно! Страница создается. Сейчас вы будете перенаправлены в кабинет.'); [cite: 2026-02-25]
+                    window.location.href = 'dashboard.html'; [cite: 2026-02-25]
                 } else {
-                    alert('Ошибка воркера. Проверьте статус вашего Cloudflare Worker.');
+                    alert('Произошла ошибка при отправке. Пожалуйста, попробуйте позже.');
                 }
             } catch (e) {
-                alert('Произошла системная ошибка: ' + e.message);
+                alert('Системная ошибка: ' + e.message);
             }
         }
+
+        document.getElementById('un').onblur = function() { if(this.value) this.readOnly = true; };
     </script>
 </body>
 </html>
